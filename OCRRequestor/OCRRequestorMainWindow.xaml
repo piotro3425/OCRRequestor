@@ -10,13 +10,14 @@
       <DockPanel LastChildFill="True">
          <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
-               <MenuItem Header="Exit"></MenuItem>
+               <MenuItem Header="Exit"
+                         Command="{Binding ExitCommand}"/>
             </MenuItem>
             <MenuItem Header="Edit">
-               <MenuItem Header="Run OCR"></MenuItem>
+               <MenuItem Header="Run OCR"/>
             </MenuItem>
             <MenuItem Header="Help">
-               <MenuItem Header="About"></MenuItem>
+               <MenuItem Header="About"/>
             </MenuItem>
          </Menu>
          <Grid Background="WhiteSmoke">
