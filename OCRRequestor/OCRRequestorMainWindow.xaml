@@ -5,8 +5,59 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OCRRequestor"
         mc:Ignorable="d"
-        Title="OCRRequestor" Height="450" Width="800">
-    <Grid>
+        Title="OCRRequestor" Height="600" Width="800">
+   <Grid>
+      <DockPanel LastChildFill="True">
+         <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+               <MenuItem Header="Exit"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Edit">
+               <MenuItem Header="Run OCR"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Help">
+               <MenuItem Header="About"></MenuItem>
+            </MenuItem>
+         </Menu>
+         <Grid Background="WhiteSmoke">
+            <Grid.ColumnDefinitions>
+               <ColumnDefinition/>
+               <ColumnDefinition/>
+               <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-    </Grid>
+            <Grid.RowDefinitions>
+               <RowDefinition/>
+               <RowDefinition/>
+               <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <DataGrid Grid.Row="0"
+                      Grid.RowSpan="3"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="2"/>
+
+            <DockPanel Grid.Row="0"
+                        Grid.Column="2">
+               <Label HorizontalAlignment="Center"
+                      DockPanel.Dock="Top"
+                      Content="Prewiew:" />
+               <Border Margin="5"
+                       BorderThickness="1"
+                       BorderBrush="#FF000000">
+                  <Image/>
+               </Border>
+            </DockPanel>
+
+            <DockPanel Grid.Row="1"
+                        Grid.Column="2">
+               <Label HorizontalAlignment="Center"
+                      DockPanel.Dock="Top"
+                      Content="Processed text:" />
+               <RichTextBox Margin="5"/>
+            </DockPanel>
+
+         </Grid>
+      </DockPanel>
+   </Grid>
 </Window>
