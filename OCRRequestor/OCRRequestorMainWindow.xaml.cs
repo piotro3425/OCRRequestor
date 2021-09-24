@@ -1,4 +1,5 @@
-﻿using OCRRequestor.ViewModel;
+﻿using OCRRequestor.Services;
+using OCRRequestor.ViewModel;
 using System.Windows;
 
 namespace OCRRequestor
@@ -11,7 +12,7 @@ namespace OCRRequestor
       public OCRRequestorMainWindow()
       {
          InitializeComponent();
-         DataContext = new OCRRequestorViewModel();
+         DataContext = new OCRRequestorViewModel(new FilesService());
       }
    }
 }

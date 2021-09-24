@@ -10,6 +10,8 @@
       <DockPanel LastChildFill="True">
          <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
+               <MenuItem Header="Open files"
+                         Command="{Binding OpenFilesCommand}"/>
                <MenuItem Header="Exit"
                          Command="{Binding ExitCommand}"/>
             </MenuItem>
@@ -20,6 +22,7 @@
                <MenuItem Header="About"/>
             </MenuItem>
          </Menu>
+
          <Grid Background="WhiteSmoke">
             <Grid.ColumnDefinitions>
                <ColumnDefinition/>
@@ -36,10 +39,21 @@
             <DataGrid Grid.Row="0"
                       Grid.RowSpan="3"
                       Grid.Column="0"
-                      Grid.ColumnSpan="2"/>
+                      Grid.ColumnSpan="2"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      ItemsSource="{Binding ocrElemsData}">
+               <DataGrid.Columns>
+                  <DataGridTextColumn Header="File Name"
+                                      Binding="{Binding FileName, Mode=OneWay}"
+                                      Width="*"/>
+                  <DataGridTextColumn Header="Is Processed"
+                                      Binding="{Binding IsProcessed, Mode=OneWay}"/>
+               </DataGrid.Columns>
+            </DataGrid>
 
             <DockPanel Grid.Row="0"
-                        Grid.Column="2">
+                       Grid.Column="2">
                <Label HorizontalAlignment="Center"
                       DockPanel.Dock="Top"
                       Content="Prewiew:" />
@@ -51,7 +65,7 @@
             </DockPanel>
 
             <DockPanel Grid.Row="1"
-                        Grid.Column="2">
+                       Grid.Column="2">
                <Label HorizontalAlignment="Center"
                       DockPanel.Dock="Top"
                       Content="Processed text:" />
