@@ -12,7 +12,7 @@ namespace OCRRequestor
       public OCRRequestorMainWindow()
       {
          InitializeComponent();
-         DataContext = new OCRRequestorViewModel(new FilesService(), new ImageProcessorService());
+         DataContext = new OCRRequestorViewModel(new FilesService(), new ImageProcessorService(), new OcrService());
       }
    }
 }

@@ -77,7 +77,10 @@
                <Label HorizontalAlignment="Center"
                       DockPanel.Dock="Top"
                       Content="Processed text:" />
-               <RichTextBox Margin="5"/>
+               <TextBox Margin="5"
+                        AcceptsReturn="True"
+                        IsReadOnly="True"
+                        Text="{Binding OcrResultText, Mode=OneWay}"/>
             </DockPanel>
 
          </Grid>

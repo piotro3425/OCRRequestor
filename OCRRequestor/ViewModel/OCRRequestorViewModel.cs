@@ -1,12 +1,12 @@
 ﻿using OCRRequestor.Commands;
 using OCRRequestor.Model;
 using OCRRequestor.Services;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -20,9 +20,11 @@ namespace OCRRequestor.ViewModel
 
       private readonly IFilesService filesService;
       private readonly IImageProcessorService imageProcessorService;
+      private readonly IOcrService ocrService;
 
       private OcrElemData selectedOcrElem;
       private string selectedOcrElemImageUrl;
+      private string ocrResultText;
 
       public OcrElemData SelectedOcrElem
       {
@@ -45,6 +47,16 @@ namespace OCRRequestor.ViewModel
          }
       }
 
+      public string OcrResultText
+      {
+         get => ocrResultText;
+         set
+         {
+            ocrResultText = value;
+            NotifyPropertyChanged();
+         }
+      }
+
       public event PropertyChangedEventHandler PropertyChanged;
       protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
       {
@@ -57,10 +69,11 @@ namespace OCRRequestor.ViewModel
 
       public ObservableCollection<OcrElemData> ocrElemsData { get; set; } = new ObservableCollection<OcrElemData>();
 
-      public OCRRequestorViewModel(IFilesService filesService, IImageProcessorService imageProcessorService)
+      public OCRRequestorViewModel(IFilesService filesService, IImageProcessorService imageProcessorService, IOcrService ocrService)
       {
          this.filesService = filesService;
          this.imageProcessorService = imageProcessorService;
+         this.ocrService = ocrService;
 
          ExitCommand = new Command(p => Application.Current.Shutdown(), p => true);
          OpenFilesCommand = new Command(OpenFilesHandler, p => true);
@@ -78,17 +91,15 @@ namespace OCRRequestor.ViewModel
          }).ToList().ForEach(e => ocrElemsData.Add(e));
       }
 
-      private void OceElemMouseDoubleClickHandler(object parameters)
+      private async void OceElemMouseDoubleClickHandler(object parameters)
       {
          if (selectedOcrElem != null)
          {
             using System.Drawing.Bitmap bitmap = imageProcessorService.LoadImage(selectedOcrElem.FileFullPath);
             using System.Drawing.Bitmap scaledBitmap = imageProcessorService.ResizeImageToWidth(bitmap, 1000);
-            MessageBox.Show($"Width: {bitmap.Width}, Height: {bitmap.Height}", "Original Image");
-            MessageBox.Show($"Width: {scaledBitmap.Width}, Height: {scaledBitmap.Height}", "Scaled Image");
-
             var data = imageProcessorService.GetBitmapAsJpgData(scaledBitmap);
-            File.WriteAllBytes("image.jpg", data);
+            var ocrResult = await ocrService.ExecuteOcrProcess(data);
+            OcrResultText = ocrResult;
          }
       }
 
