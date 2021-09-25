@@ -18,7 +18,8 @@ namespace OCRRequestor.ViewModel
       public ICommand OpenFilesCommand { get; set; }
       public ICommand OcrElemMouseDoubleClickCommand { get; set; }
 
-      private IFilesService filesService;
+      private readonly IFilesService filesService;
+      private readonly IImageProcessorService imageProcessorService;
 
       private OcrElemData selectedOcrElem;
       private string selectedOcrElemImageUrl;
@@ -56,9 +57,10 @@ namespace OCRRequestor.ViewModel
 
       public ObservableCollection<OcrElemData> ocrElemsData { get; set; } = new ObservableCollection<OcrElemData>();
 
-      public OCRRequestorViewModel(IFilesService filesService)
+      public OCRRequestorViewModel(IFilesService filesService, IImageProcessorService imageProcessorService)
       {
          this.filesService = filesService;
+         this.imageProcessorService = imageProcessorService;
 
          ExitCommand = new Command(p => Application.Current.Shutdown(), p => true);
          OpenFilesCommand = new Command(OpenFilesHandler, p => true);
@@ -80,7 +82,13 @@ namespace OCRRequestor.ViewModel
       {
          if (selectedOcrElem != null)
          {
-            MessageBox.Show(selectedOcrElem.FileName);
+            using System.Drawing.Bitmap bitmap = imageProcessorService.LoadImage(selectedOcrElem.FileFullPath);
+            using System.Drawing.Bitmap scaledBitmap = imageProcessorService.ResizeImageToWidth(bitmap, 1000);
+            MessageBox.Show($"Width: {bitmap.Width}, Height: {bitmap.Height}", "Original Image");
+            MessageBox.Show($"Width: {scaledBitmap.Width}, Height: {scaledBitmap.Height}", "Scaled Image");
+
+            var data = imageProcessorService.GetBitmapAsJpgData(scaledBitmap);
+            File.WriteAllBytes("image.jpg", data);
          }
       }
 
