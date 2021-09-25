@@ -16,6 +16,7 @@ namespace OCRRequestor.ViewModel
    {
       public ICommand ExitCommand { get; set; }
       public ICommand OpenFilesCommand { get; set; }
+      public ICommand OcrElemMouseDoubleClickCommand { get; set; }
 
       private IFilesService filesService;
 
@@ -61,6 +62,7 @@ namespace OCRRequestor.ViewModel
 
          ExitCommand = new Command(p => Application.Current.Shutdown(), p => true);
          OpenFilesCommand = new Command(OpenFilesHandler, p => true);
+         OcrElemMouseDoubleClickCommand = new Command(OceElemMouseDoubleClickHandler, p => true);
       }
       private void OpenFilesHandler(object parameter)
       {
@@ -72,6 +74,14 @@ namespace OCRRequestor.ViewModel
             FileFullPath = e,
             IsProcessed = false
          }).ToList().ForEach(e => ocrElemsData.Add(e));
+      }
+
+      private void OceElemMouseDoubleClickHandler(object parameters)
+      {
+         if (selectedOcrElem != null)
+         {
+            MessageBox.Show(selectedOcrElem.FileName);
+         }
       }
 
       private void UpdatePreview(OcrElemData ocrElemData) => SelectedOcrElemImageUrl = ocrElemData?.FileFullPath;

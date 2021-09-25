@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OCRRequestor"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="OCRRequestor" Height="600" Width="800">
    <Grid>
@@ -51,6 +52,12 @@
                   <DataGridTextColumn Header="Is Processed"
                                       Binding="{Binding IsProcessed, Mode=OneWay}"/>
                </DataGrid.Columns>
+               <i:Interaction.Triggers>
+                  <i:EventTrigger EventName="MouseDoubleClick">
+                     <i:InvokeCommandAction Command="{Binding OcrElemMouseDoubleClickCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
+                  </i:EventTrigger>
+               </i:Interaction.Triggers>
             </DataGrid>
 
             <DockPanel Grid.Row="0"
