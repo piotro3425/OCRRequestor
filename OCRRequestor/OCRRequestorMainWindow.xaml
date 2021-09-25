@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:OCRRequestor"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="OCRRequestor" Height="600" Width="800">
+        Title="OCRRequestor" Height="768" Width="1024">
    <Grid>
       <DockPanel LastChildFill="True">
          <Menu DockPanel.Dock="Top">
@@ -43,12 +43,15 @@
                       Grid.ColumnSpan="2"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
-                      ItemsSource="{Binding ocrElemsData, Mode=OneWay}"
+                      ItemsSource="{Binding ocrElemsData, Mode=TwoWay}"
                       SelectedItem="{Binding SelectedOcrElem, Mode=OneWayToSource}">
                <DataGrid.Columns>
                   <DataGridTextColumn Header="File Name"
                                       Binding="{Binding FileName, Mode=OneWay}"
-                                      Width="*"/>
+                                      Width="6*"/>
+                  <DataGridTextColumn Header="OCR Result"
+                                      Binding="{Binding OcrResult, Mode=OneWay}"
+                                      Width="4*"/>
                   <DataGridTextColumn Header="Is Processed"
                                       Binding="{Binding IsProcessed, Mode=OneWay}"/>
                </DataGrid.Columns>

@@ -34,6 +34,17 @@ namespace OCRRequestor.ViewModel
             selectedOcrElem = value;
             NotifyPropertyChanged();
             UpdatePreview(value);
+            UpdateOcrResult(value);
+         }
+      }
+
+      private void UpdatePreview(OcrElemData ocrElemData) => SelectedOcrElemImageUrl = ocrElemData?.FileFullPath;
+
+      private void UpdateOcrResult(OcrElemData value)
+      {
+         if (value is not null && value.IsProcessed)
+         {
+            OcrResultText = value.OcrResult;
          }
       }
 
@@ -93,16 +104,26 @@ namespace OCRRequestor.ViewModel
 
       private async void OceElemMouseDoubleClickHandler(object parameters)
       {
-         if (selectedOcrElem != null)
+         await OcrSingleElement(SelectedOcrElem);
+      }
+
+      private async Task OcrSingleElement(OcrElemData ocrElemData)
+      {
+         if (ocrElemData != null)
          {
-            using System.Drawing.Bitmap bitmap = imageProcessorService.LoadImage(selectedOcrElem.FileFullPath);
+            using System.Drawing.Bitmap bitmap = imageProcessorService.LoadImage(ocrElemData.FileFullPath);
             using System.Drawing.Bitmap scaledBitmap = imageProcessorService.ResizeImageToWidth(bitmap, 1000);
             var data = imageProcessorService.GetBitmapAsJpgData(scaledBitmap);
             var ocrResult = await ocrService.ExecuteOcrProcess(data);
-            OcrResultText = ocrResult;
+
+            if (ocrResult != null)
+            {
+               ocrElemData.IsProcessed = true;
+               ocrElemData.OcrResult = ocrResult;
+               OcrResultText = ocrResult;
+            }
          }
       }
 
-      private void UpdatePreview(OcrElemData ocrElemData) => SelectedOcrElemImageUrl = ocrElemData?.FileFullPath;
    }
 }
