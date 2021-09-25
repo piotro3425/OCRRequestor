@@ -42,7 +42,8 @@
                       Grid.ColumnSpan="2"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
-                      ItemsSource="{Binding ocrElemsData}">
+                      ItemsSource="{Binding ocrElemsData, Mode=OneWay}"
+                      SelectedItem="{Binding SelectedOcrElem, Mode=OneWayToSource}">
                <DataGrid.Columns>
                   <DataGridTextColumn Header="File Name"
                                       Binding="{Binding FileName, Mode=OneWay}"
@@ -60,7 +61,7 @@
                <Border Margin="5"
                        BorderThickness="1"
                        BorderBrush="#FF000000">
-                  <Image/>
+                  <Image Source="{Binding SelectedOcrElemImageUrl, TargetNullValue={x:Null}}"/>
                </Border>
             </DockPanel>
 

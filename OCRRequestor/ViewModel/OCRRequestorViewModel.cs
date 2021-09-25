@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 
@@ -18,15 +19,39 @@ namespace OCRRequestor.ViewModel
 
       private IFilesService filesService;
 
+      private OcrElemData selectedOcrElem;
+      private string selectedOcrElemImageUrl;
+
+      public OcrElemData SelectedOcrElem
+      {
+         get => selectedOcrElem;
+         set
+         {
+            selectedOcrElem = value;
+            NotifyPropertyChanged();
+            UpdatePreview(value);
+         }
+      }
+
+      public string SelectedOcrElemImageUrl
+      {
+         get => selectedOcrElemImageUrl;
+         set
+         {
+            selectedOcrElemImageUrl = value;
+            NotifyPropertyChanged();
+         }
+      }
+
       public event PropertyChangedEventHandler PropertyChanged;
-      protected virtual void NotifyPropertyChanged(params string[] propertyNames)
+      protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
       {
          if (PropertyChanged != null)
          {
-            foreach (string propertyName in propertyNames)
-               PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
          }
       }
+
 
       public ObservableCollection<OcrElemData> ocrElemsData { get; set; } = new ObservableCollection<OcrElemData>();
 
@@ -48,5 +73,7 @@ namespace OCRRequestor.ViewModel
             IsProcessed = false
          }).ToList().ForEach(e => ocrElemsData.Add(e));
       }
+
+      private void UpdatePreview(OcrElemData ocrElemData) => SelectedOcrElemImageUrl = ocrElemData?.FileFullPath;
    }
 }
