@@ -9,6 +9,8 @@ namespace OCRRequestor.Services
    {
       public IEnumerable<string> OpenImageFiles()
       {
+         string[] fileNames = new string[0];
+
          try
          {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -17,7 +19,7 @@ namespace OCRRequestor.Services
 
             if (openFileDialog.ShowDialog() == true)
             {
-               return openFileDialog.FileNames;
+               fileNames = openFileDialog.FileNames;
             }
          }
          catch(Exception ex)
@@ -25,7 +27,7 @@ namespace OCRRequestor.Services
             MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
          }
 
-         return new string[0];
+         return fileNames;
       }
    }
 }
