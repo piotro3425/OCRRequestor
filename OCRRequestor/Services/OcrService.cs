@@ -55,7 +55,7 @@ namespace OCRRequestor.Services
             text += ocrResult.ParsedResults[i].ParsedText;
          }
 
-         return text;
+         return text.Trim();
       }
 
       private MultipartFormDataContent PrepareFormData(byte[] imageData)
