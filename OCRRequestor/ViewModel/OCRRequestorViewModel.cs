@@ -15,6 +15,9 @@ namespace OCRRequestor.ViewModel
       public ICommand ExitCommand { get; set; }
       public ICommand OpenFilesCommand { get; set; }
       public ICommand OcrElemMouseDoubleClickCommand { get; set; }
+      public ICommand LoadedCommand { get; set; }
+
+      private const string ApiKeyFilePath = "apikey.txt";
 
       private readonly IFilesService filesService;
       private readonly IImageProcessorService imageProcessorService;
@@ -68,7 +71,17 @@ namespace OCRRequestor.ViewModel
          ExitCommand = new Command(p => Application.Current.Shutdown(), p => true);
          OpenFilesCommand = new Command(OpenFilesHandler, p => true);
          OcrElemMouseDoubleClickCommand = new Command(OceElemMouseDoubleClickHandler, p => true);
+         LoadedCommand = new Command(LoadedHandler, p => true);
       }
+
+      private void LoadedHandler(object obj)
+      {
+         if(ocrService != null && File.Exists(ApiKeyFilePath))
+         {
+            ocrService.SetApiKey(File.ReadAllText(ApiKeyFilePath));
+         }
+      }
+
       private void OpenFilesHandler(object parameter)
       {
          ocrElemsData.Clear();

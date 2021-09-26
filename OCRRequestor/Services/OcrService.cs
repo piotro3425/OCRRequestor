@@ -10,6 +10,10 @@ namespace OCRRequestor.Services
    class OcrService : IOcrService
    {
       private const string RequestUri = "https://api.ocr.space/Parse/Image";
+      private const string DefaultApiKey = "helloworld";
+      private string apiKey = string.Empty;
+
+      public void SetApiKey(string apiKey) => this.apiKey = apiKey;
 
       public async Task<string> ExecuteOcrProcess(byte[] imageData)
       {
@@ -42,7 +46,7 @@ namespace OCRRequestor.Services
          return parsedText;
       }
 
-      private static string ExtractText(Rootobject ocrResult)
+      private string ExtractText(Rootobject ocrResult)
       {
          string text = string.Empty;
 
@@ -54,10 +58,10 @@ namespace OCRRequestor.Services
          return text;
       }
 
-      private static MultipartFormDataContent PrepareFormData(byte[] imageData)
+      private MultipartFormDataContent PrepareFormData(byte[] imageData)
       {
          MultipartFormDataContent form = new MultipartFormDataContent();
-         form.Add(new StringContent("helloworld"), "apikey");
+         form.Add(new StringContent(GetProperApiKey()), "apikey");
          form.Add(new StringContent("pol"), "language");
          form.Add(new StringContent("2"), "ocrengine");
          form.Add(new StringContent("true"), "scale");
@@ -66,5 +70,7 @@ namespace OCRRequestor.Services
 
          return form;
       }
+
+      private string GetProperApiKey() => string.IsNullOrEmpty(apiKey) ? DefaultApiKey : apiKey;
    }
 }

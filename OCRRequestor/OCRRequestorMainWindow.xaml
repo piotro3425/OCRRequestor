@@ -89,4 +89,10 @@
          </Grid>
       </DockPanel>
    </Grid>
+
+   <i:Interaction.Triggers>
+      <i:EventTrigger EventName="Loaded">
+         <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+      </i:EventTrigger>
+   </i:Interaction.Triggers>
 </Window>
