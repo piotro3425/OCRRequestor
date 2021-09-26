@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using OCRRequestor.ViewModel;
 
 namespace OCRRequestor.Model
 {
-   class OcrElemData : INotifyPropertyChanged
+   class OcrElemData : ViewModelBase
    {
       private string fileName;
       private string fileFullPath;
@@ -13,47 +12,22 @@ namespace OCRRequestor.Model
       public string FileName
       {
          get => fileName;
-         set
-         {
-            fileName = value;
-            NotifyPropertyChanged();
-         }
+         set => SetProperty(ref fileName, value);
       }
       public string FileFullPath
       {
          get => fileFullPath;
-         set
-         {
-            fileFullPath = value;
-            NotifyPropertyChanged();
-         }
+         set => SetProperty(ref fileFullPath, value);
       }
       public bool IsProcessed
       {
          get => isProcessed;
-         set
-         {
-            isProcessed = value;
-            NotifyPropertyChanged();
-         }
+         set => SetProperty(ref isProcessed, value);
       }
       public string OcrResult
       {
          get => ocrResult;
-         set
-         {
-            ocrResult = value;
-            NotifyPropertyChanged();
-         }
-      }
-
-      public event PropertyChangedEventHandler PropertyChanged;
-      protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
+         set => SetProperty(ref ocrResult, value);
       }
    }
 }

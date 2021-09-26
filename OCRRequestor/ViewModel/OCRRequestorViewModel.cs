@@ -2,17 +2,15 @@
 using OCRRequestor.Model;
 using OCRRequestor.Services;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace OCRRequestor.ViewModel
 {
-   class OCRRequestorViewModel : INotifyPropertyChanged
+   class OCRRequestorViewModel : ViewModelBase
    {
       public ICommand ExitCommand { get; set; }
       public ICommand OpenFilesCommand { get; set; }
@@ -31,8 +29,7 @@ namespace OCRRequestor.ViewModel
          get => selectedOcrElem;
          set
          {
-            selectedOcrElem = value;
-            NotifyPropertyChanged();
+            SetProperty(ref selectedOcrElem, value);
             UpdatePreview(value);
             UpdateOcrResult(value);
          }
@@ -51,32 +48,14 @@ namespace OCRRequestor.ViewModel
       public string SelectedOcrElemImageUrl
       {
          get => selectedOcrElemImageUrl;
-         set
-         {
-            selectedOcrElemImageUrl = value;
-            NotifyPropertyChanged();
-         }
+         set => SetProperty(ref selectedOcrElemImageUrl, value);
       }
 
       public string OcrResultText
       {
          get => ocrResultText;
-         set
-         {
-            ocrResultText = value;
-            NotifyPropertyChanged();
-         }
+         set => SetProperty(ref ocrResultText, value);
       }
-
-      public event PropertyChangedEventHandler PropertyChanged;
-      protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
-      }
-
 
       public ObservableCollection<OcrElemData> ocrElemsData { get; set; } = new ObservableCollection<OcrElemData>();
 
