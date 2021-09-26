@@ -1,6 +1,7 @@
 ﻿using OCRRequestor.Commands;
 using OCRRequestor.Model;
 using OCRRequestor.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace OCRRequestor.ViewModel
       public ICommand OpenFilesCommand { get; set; }
       public ICommand OcrElemMouseDoubleClickCommand { get; set; }
       public ICommand LoadedCommand { get; set; }
+      public ICommand RunOcrForAllNotProcessedYetCommand { get; set; }
 
       private const string ApiKeyFilePath = "apikey.txt";
 
@@ -26,6 +28,7 @@ namespace OCRRequestor.ViewModel
       private OcrElemData selectedOcrElem;
       private string selectedOcrElemImageUrl;
       private string ocrResultText;
+      private string progressCounter;
 
       public OcrElemData SelectedOcrElem
       {
@@ -60,6 +63,12 @@ namespace OCRRequestor.ViewModel
          set => SetProperty(ref ocrResultText, value);
       }
 
+      public string ProgressCounter
+      {
+         get => progressCounter;
+         set => SetProperty(ref progressCounter, value);
+      }
+
       public ObservableCollection<OcrElemData> ocrElemsData { get; set; } = new ObservableCollection<OcrElemData>();
 
       public OCRRequestorViewModel(IFilesService filesService, IImageProcessorService imageProcessorService, IOcrService ocrService)
@@ -72,9 +81,36 @@ namespace OCRRequestor.ViewModel
          OpenFilesCommand = new Command(OpenFilesHandler, p => true);
          OcrElemMouseDoubleClickCommand = new Command(OceElemMouseDoubleClickHandler, p => true);
          LoadedCommand = new Command(LoadedHandler, p => true);
+         RunOcrForAllNotProcessedYetCommand = new Command(RunOcrForAllNotProcessedYetHandler, p => true);
+
+         ProgressCounter = "Ready to run";
       }
 
-      private void LoadedHandler(object obj)
+      private async void RunOcrForAllNotProcessedYetHandler(object parameter)
+      {
+         var notTranslatedOcrElems = ocrElemsData.Where(e => !e.IsProcessed).ToList();
+         int counter = 0;
+
+         try
+         {
+            foreach (var ocrElem in notTranslatedOcrElems)
+            {
+               await OcrSingleElement(ocrElem);
+               SetProgress("Started", ++counter, notTranslatedOcrElems.Count);
+            }
+
+            SetProgress("Finished", counter, notTranslatedOcrElems.Count);
+         }
+         catch(Exception)
+         {
+            SetProgress("Stopped", counter, notTranslatedOcrElems.Count);
+         }
+      }
+
+      private void SetProgress(string state, int processedCout, int allCount)
+         => ProgressCounter = $"{state}: {processedCout} / {allCount}";
+
+      private void LoadedHandler(object parameter)
       {
          if (ocrService != null && File.Exists(ApiKeyFilePath))
          {
@@ -95,7 +131,7 @@ namespace OCRRequestor.ViewModel
             .ToList()
             .ForEach(e =>
             {
-               if(filesService.SearchForOcrReultFileInOutput(Path.GetFileNameWithoutExtension(e.FileName), out string content))
+               if (filesService.SearchForOcrReultFileInOutput(Path.GetFileNameWithoutExtension(e.FileName), out string content))
                {
                   e.IsProcessed = true;
                   e.OcrResult = content;

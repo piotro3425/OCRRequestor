@@ -40,7 +40,7 @@ namespace OCRRequestor.Services
          catch (Exception ex)
          {
             System.Windows.MessageBox.Show(ex.ToString(), "Error");
-            return null;
+            throw;
          }
 
          return parsedText;

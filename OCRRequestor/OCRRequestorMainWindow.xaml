@@ -17,7 +17,8 @@
                          Command="{Binding ExitCommand}"/>
             </MenuItem>
             <MenuItem Header="Edit">
-               <MenuItem Header="Run OCR"/>
+               <MenuItem Header="Run OCR for all not processed yet"
+                         Command="{Binding RunOcrForAllNotProcessedYetCommand}"/>
             </MenuItem>
             <MenuItem Header="Help">
                <MenuItem Header="About"/>
@@ -86,6 +87,13 @@
                         Text="{Binding OcrResultText, Mode=OneWay}"/>
             </DockPanel>
 
+            <DockPanel Grid.Row="2"
+                       Grid.Column="2"
+                       Margin="5">
+               <Label HorizontalAlignment="Center"
+                      DockPanel.Dock="Top"
+                      Content="{Binding ProgressCounter, Mode=OneWay}"/>
+            </DockPanel>
          </Grid>
       </DockPanel>
    </Grid>
