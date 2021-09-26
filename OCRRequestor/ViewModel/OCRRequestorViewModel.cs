@@ -76,7 +76,7 @@ namespace OCRRequestor.ViewModel
 
       private void LoadedHandler(object obj)
       {
-         if(ocrService != null && File.Exists(ApiKeyFilePath))
+         if (ocrService != null && File.Exists(ApiKeyFilePath))
          {
             ocrService.SetApiKey(File.ReadAllText(ApiKeyFilePath));
          }
@@ -91,7 +91,17 @@ namespace OCRRequestor.ViewModel
             FileName = Path.GetFileName(e),
             FileFullPath = e,
             IsProcessed = false
-         }).ToList().ForEach(e => ocrElemsData.Add(e));
+         })
+            .ToList()
+            .ForEach(e =>
+            {
+               if(filesService.SearchForOcrReultFileInOutput(Path.GetFileNameWithoutExtension(e.FileName), out string content))
+               {
+                  e.IsProcessed = true;
+                  e.OcrResult = content;
+               }
+               ocrElemsData.Add(e);
+            });
       }
 
       private async void OceElemMouseDoubleClickHandler(object parameters)
@@ -110,6 +120,8 @@ namespace OCRRequestor.ViewModel
 
             if (ocrResult != null)
             {
+               filesService.SaveOcrResultToFileInOutput(Path.GetFileNameWithoutExtension(ocrElemData.FileName), ocrResult);
+
                ocrElemData.IsProcessed = true;
                ocrElemData.OcrResult = ocrResult;
                OcrResultText = ocrResult;
