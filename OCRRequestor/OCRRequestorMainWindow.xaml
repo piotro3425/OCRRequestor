@@ -19,6 +19,11 @@
             <MenuItem Header="Edit">
                <MenuItem Header="Run OCR for all not processed yet"
                          Command="{Binding RunOcrForAllNotProcessedYetCommand}"/>
+               <MenuItem Header="OCR Engine">
+                  <MenuItem Header="Use alternative Engine 2 instead of main Engine 1"
+                            IsCheckable="True"
+                            IsChecked="{Binding IsCheckedAlternativeEngine}"/>
+               </MenuItem>
             </MenuItem>
             <MenuItem Header="Help">
                <MenuItem Header="About"/>

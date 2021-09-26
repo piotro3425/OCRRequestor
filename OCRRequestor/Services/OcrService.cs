@@ -12,8 +12,10 @@ namespace OCRRequestor.Services
       private const string RequestUri = "https://api.ocr.space/Parse/Image";
       private const string DefaultApiKey = "helloworld";
       private string apiKey = string.Empty;
+      private bool useAlternativeEngine = false;
 
       public void SetApiKey(string apiKey) => this.apiKey = apiKey;
+      public void SetUseOfAlternativeEngine(bool useAlternativeEngine) => this.useAlternativeEngine = useAlternativeEngine;
 
       public async Task<string> ExecuteOcrProcess(byte[] imageData)
       {
@@ -63,7 +65,7 @@ namespace OCRRequestor.Services
          MultipartFormDataContent form = new MultipartFormDataContent();
          form.Add(new StringContent(GetProperApiKey()), "apikey");
          form.Add(new StringContent("pol"), "language");
-         form.Add(new StringContent("2"), "ocrengine");
+         form.Add(new StringContent(useAlternativeEngine ? "2" : "1"), "ocrengine");
          form.Add(new StringContent("true"), "scale");
          form.Add(new StringContent("true"), "istable");
          form.Add(new ByteArrayContent(imageData, 0, imageData.Length), "image", "image.jpg");

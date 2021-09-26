@@ -29,6 +29,7 @@ namespace OCRRequestor.ViewModel
       private string selectedOcrElemImageUrl;
       private string ocrResultText;
       private string progressCounter;
+      private bool isCheckedAlternativeEngine;
 
       public OcrElemData SelectedOcrElem
       {
@@ -69,6 +70,16 @@ namespace OCRRequestor.ViewModel
          set => SetProperty(ref progressCounter, value);
       }
 
+      public bool IsCheckedAlternativeEngine
+      {
+         get => isCheckedAlternativeEngine;
+         set
+         {
+            SetProperty(ref isCheckedAlternativeEngine, value);
+            ocrService.SetUseOfAlternativeEngine(value);
+         }
+      }
+
       public ObservableCollection<OcrElemData> ocrElemsData { get; set; } = new ObservableCollection<OcrElemData>();
 
       public OCRRequestorViewModel(IFilesService filesService, IImageProcessorService imageProcessorService, IOcrService ocrService)
@@ -101,7 +112,7 @@ namespace OCRRequestor.ViewModel
 
             SetProgress("Finished", counter, notTranslatedOcrElems.Count);
          }
-         catch(Exception)
+         catch (Exception)
          {
             SetProgress("Stopped", counter, notTranslatedOcrElems.Count);
          }
